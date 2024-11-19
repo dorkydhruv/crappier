@@ -1,9 +1,17 @@
 import type { NextAuthOptions, Session } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-
+import { LoginSchema } from "./lib/types";
+import prisma from "./lib/db";
+import bcrypt from "bcrypt";
+import { getUserById } from "./lib/functions/getuserById";
 export interface session extends Session {
-  user: {};
+  user: {
+    id: string;
+    email: string;
+    profileImage?: string;
+    name: string;
+  };
 }
 
 export const authConfig = {
@@ -23,7 +31,30 @@ export const authConfig = {
         },
       },
       async authorize(credentials: any, req) {
-        // Add logic here to validate user credentials
+        const validatedCred = LoginSchema.safeParse(credentials);
+        if (!validatedCred.success) {
+          return null;
+        }
+        const { email, password } = validatedCred.data;
+        // Check if user already exists
+        const user = await prisma.user.findFirst({
+          where: {
+            email,
+          },
+        });
+        if (!user || !user.verified) {
+          return null;
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (passwordMatch) {
+          return {
+            id: user.id,
+            email: user.email,
+            image: user.profileImage,
+            name: user.name,
+          };
+        }
         return null;
       },
     }),
@@ -32,22 +63,23 @@ export const authConfig = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id;
+      }
+      return token;
+    },
+    async session({ session, token, user }) {
+      session.user = user;
+      return session;
+    },
+  },
+  secret: process.env.AUTH_SECRET,
   pages: {
     signIn: "/signin",
   },
-  callbacks: {
-    async jwt({ token }) {
-      return token;
-    },
-    async session({ session, token }) {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: token.id,
-          email: token.email,
-        },
-      };
-    },
+  session: {
+    strategy: "jwt",
   },
 } satisfies NextAuthOptions;

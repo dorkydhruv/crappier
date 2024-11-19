@@ -4,8 +4,15 @@ import CheckedFeature from "@/components/CheckedFeature";
 import Divider from "@/components/Divider";
 import InputLabel from "@/components/InputLabel";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
+import { useState } from "react";
 
 export default function Signup() {
+  const { toast } = useToast();
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   return (
     <div className='flex flex-col min-h-screen'>
       <Appbar />
@@ -25,22 +32,42 @@ export default function Signup() {
               type='email'
               label='Email'
               placeholder=''
-              onChange={() => {}}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
             />
             <InputLabel
               type='text'
               label='Username'
               placeholder=''
-              onChange={() => {}}
+              onChange={(e) => {
+                setUsername(e.target.value);
+              }}
             />
             <InputLabel
               type='password'
               label='Password'
               placeholder=''
-              onChange={() => {}}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
             />
             <div className='flex mt-2'>
-              <Button>Sign up</Button>
+              <Button
+                onClick={async () => {
+                  console.log("signup");
+                  const response = await axios.post("/api/signup", {
+                    email,
+                    password,
+                    name: username,
+                  });
+                  toast({
+                    title: response.data.message,
+                  });
+                }}
+              >
+                Sign up
+              </Button>
             </div>
             <Divider text='OR' />
             <Button className='w-full bg-[#4285f4] hover:bg-[#3367d6]'>
