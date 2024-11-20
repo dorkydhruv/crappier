@@ -6,6 +6,7 @@ import InputLabel from "@/components/InputLabel";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
+import { signIn } from "next-auth/react";
 import { useState } from "react";
 
 export default function Signup() {
@@ -70,7 +71,15 @@ export default function Signup() {
               </Button>
             </div>
             <Divider text='OR' />
-            <Button className='w-full bg-[#4285f4] hover:bg-[#3367d6]'>
+            <Button
+              className='w-full bg-[#4285f4] hover:bg-[#3367d6]'
+              onClick={() => {
+                signIn("google", {
+                  redirect: false,
+                  callbackUrl: "/",
+                });
+              }}
+            >
               <div className='flex justify-between'>
                 {/* <Image
                   src='https://www.google.com/url?sa=i&url=https%3A%2F%2Ficonduck.com%2Ficons%2F14086%2Fgoogle&psig=AOvVaw2ZTK7csTn1ua1SzA-djft5&ust=1731495484551000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCLjK4qrR1okDFQAAAAAdAAAAABAw'
