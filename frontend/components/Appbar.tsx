@@ -5,6 +5,8 @@ import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { ProfileAvatar } from "./ProfileAvatar";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { FundPot } from "./FundPot";
 
 export function Appbar() {
   const { data, status, update } = useSession();
@@ -30,7 +32,21 @@ export function Appbar() {
         )}
         {status === "authenticated" && (
           <div className='ml-auto flex gap-4 sm:gap-6'>
-            <CookingPot className='h-7 w-7' />
+            <div className=''>
+              <WalletMultiButton
+                style={{
+                  padding: "0.5rem 0.8rem",
+                  maxHeight: "2.3rem",
+                  display: "flex",
+                  backgroundColor: "var(--color-primary)",
+                  color: "var(--color-text)",
+                  borderRadius: "0.2rem",
+                  border: `1px solid grey`,
+                  alignItems: "center",
+                }}
+              />
+            </div>
+            <FundPot />
             <ProfileAvatar user={data.user} />
           </div>
         )}
