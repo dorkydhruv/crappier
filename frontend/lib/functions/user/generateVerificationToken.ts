@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import prisma from "../db";
+import prisma from "../../db";
 import { getVerificationTokenByEmail } from "./getverificationToken";
 import { Resend } from "resend";
 export const generateVerificationToken = async (email: string) => {

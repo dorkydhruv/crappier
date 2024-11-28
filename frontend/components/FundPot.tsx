@@ -2,11 +2,8 @@
 import Image from "next/image";
 import {
   AlertDialogHeader,
-  AlertDialogFooter,
   AlertDialogDescription,
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogTitle,
   AlertDialogTrigger,
@@ -15,18 +12,54 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { fundPotTx } from "@/lib/fundPotTx";
+import { fundPotTx } from "@/lib/functions/pot/fundPotTx";
 import { connection } from "@/constants/const";
 import { useState } from "react";
+import { getPotBalance } from "@/hooks/getPotBalance";
+import SmallLoader from "./SmallLoader";
 
-export const FundPot = () => {
+export const FundPot = (user: { email: string }) => {
   const { toast } = useToast();
   const { signTransaction, publicKey } = useWallet();
   const [amount, setAmount] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
+  const { balance, balanceLoading } = getPotBalance(user.email);
+  const handleFundPot = async () => {
+    if (!publicKey || !signTransaction) {
+      toast({ title: "Wallet not connected" });
+      return;
+    }
+    setLoading(true);
+    try {
+      const transaction = await fundPotTx({
+        amount,
+        fromPublickey: publicKey,
+        email: user.email,
+      });
+      const signedTransaction = await signTransaction(transaction);
+      const signature = await connection.sendRawTransaction(
+        signedTransaction.serialize()
+      );
+      await connection.confirmTransaction(signature, "processed");
+      toast({
+        title: "Pot funded successfully",
+        description: `See transaction...`,
+        onClick: () =>
+          window.open(
+            `https://explorer.solana.com/tx/${signature}?cluster=devnet`
+          ),
+      });
+    } catch (error) {
+      toast({ title: "Transaction failed" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant='outline'>Fund pot 🍯</Button>
+        <Button variant={"ghost"} className="border border-black">Fund pot 🍯</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -45,48 +78,25 @@ export const FundPot = () => {
                 className='w-50'
                 required
               />
-              <span className="text-black font-bold">SOL</span>
+              <span className='text-black font-bold'>SOL</span>
             </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={async () => {
-              if (!publicKey) {
-                toast({
-                  title: "Error",
-                  description: "Please connect your wallet",
-                });
-                return;
-              }
-              const tx = await fundPotTx({
-                amount,
-                fromPublickey: publicKey,
-              });
-              if (!signTransaction) return;
-              if (!tx) return;
-              const txSigned = await signTransaction(tx);
-              console.log("txsigned", txSigned);
-              if (!txSigned) return;
-              const txId = await connection.sendRawTransaction(
-                txSigned.serialize()
-              );
-              console.log(txId);
-              await connection.confirmTransaction(txId);
-              toast({
-                title: "Success",
-                description: `Funded the pot with ${amount} SOL. Check the transaction here: https://explorer.solana.com/tx/${txId}?cluster=devnet`,
-                onClick: () =>
-                  window.open(
-                    `https://explorer.solana.com/tx/${txId}?cluster=devnet`
-                  ),
-              });
-            }}
-          >
-            Pay
-          </AlertDialogAction>
-        </AlertDialogFooter>
+        <div className='flex justify-between items-center'>
+          <div>
+            <p className='text-sm text-muted-foreground'>
+              Your current pot balance is{" "}
+              {balanceLoading ? (
+                <SmallLoader />
+              ) : (
+                <span className='font-bold'>{balance} SOL</span>
+              )}
+            </p>
+          </div>
+          <Button onClick={handleFundPot}  disabled={loading}>
+            {loading ? <SmallLoader /> : "Fund"}
+          </Button>
+        </div>
       </AlertDialogContent>
     </AlertDialog>
   );

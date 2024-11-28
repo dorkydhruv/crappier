@@ -20,6 +20,7 @@ model User{
   password String?
   profileImage String @default("https://www.gravatar.com/avatar")
   verified Boolean @default(false)
+  zaps Zap[]
 }
 
 model VerificationToken{
@@ -29,4 +30,68 @@ model VerificationToken{
   expiresAt DateTime
 
   @@unique([token, email])
+}
+
+// Zap --> 1 Trigger and multiple actions
+model Zap{
+  id String @id @default(uuid())
+  name String @default("Untitled Zap")
+  description String?
+  triggerId String
+  trigger Trigger?
+  actions Action[]
+  userId String
+  user User @relation(fields: [userId],references: [id])
+  zapRuns ZapRun[]
+}
+
+model Trigger{
+  id String @id @default(uuid())
+  zapId String @unique
+  zap Zap @relation(fields: [zapId],references: [id])
+  metadata Json
+  availableTriggerId String
+  availableTrigger AvailableTriggers @relation(fields: [availableTriggerId],references: [id])
+}
+
+model Action{
+  id String @id @default(uuid())
+  zapId String
+  zap Zap @relation(fields: [zapId],references: [id])
+  metadata Json
+  availableActionId String
+  availableAction AvailableActions @relation(fields: [availableActionId],references: [id])
+  sortingOrder Int @default(0)
+}
+
+// Supporting actions --> Email and solana transactions
+model AvailableActions{
+  id String @id @default(uuid())
+  name String
+  image String 
+  description String?
+  actions Action[]
+}
+
+// Supporting triggers --> webhook
+model AvailableTriggers{
+  id String @id @default(uuid())
+  name String
+  image String
+  description String?
+  triggers Trigger[]
+}
+
+model ZapRun{
+  id String @default(uuid()) @id
+  zapId String
+  zap Zap @relation(fields: [zapId],references: [id])
+  payload Json
+  ZapRunOutbox ZapRunOutbox?
+}
+
+model ZapRunOutbox{
+  id String @default(uuid()) @id
+  zapRunId String @unique
+  zapRun ZapRun @relation(fields: [zapRunId],references: [id])
 }

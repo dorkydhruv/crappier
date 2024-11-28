@@ -46,7 +46,7 @@ export function Appbar() {
                 }}
               />
             </div>
-            <FundPot />
+            <FundPot email={data.user?.email ?? ""} />
             <ProfileAvatar user={data.user} />
           </div>
         )}

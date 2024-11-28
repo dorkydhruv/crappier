@@ -1,4 +1,4 @@
-import { validateToken } from "@/lib/functions/validateToken";
+import { validateToken } from "@/lib/functions/user/validateToken";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {

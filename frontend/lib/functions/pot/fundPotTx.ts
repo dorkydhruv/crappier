@@ -8,12 +8,14 @@ import {
 export const fundPotTx = async ({
   amount,
   fromPublickey,
+  email,
 }: {
   amount: number;
   fromPublickey: PublicKey;
+  email: string;
 }) => {
   const [potAccount, potBump] = PublicKey.findProgramAddressSync(
-    [Buffer.from("pot"), Buffer.from("email")],
+    [Buffer.from("pot"), Buffer.from(email)],
     PROGRAM_ID
   );
   try {
@@ -32,5 +34,6 @@ export const fundPotTx = async ({
     return tx;
   } catch (error) {
     console.error("Transaction failed:", error);
+    return new Transaction();
   }
 };

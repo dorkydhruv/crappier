@@ -1,7 +1,7 @@
 import prisma from "@/lib/db";
 import { CreateUserSchema } from "@/lib/types";
 import bcrypt from "bcrypt";
-import { generateVerificationToken } from "@/lib/functions/generateVerificationToken";
+import { generateVerificationToken } from "@/lib/functions/user/generateVerificationToken";
 import { NextRequest, NextResponse } from "next/server";
 export const POST = async (req: NextRequest) => {
   try {
