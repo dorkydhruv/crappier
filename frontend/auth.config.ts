@@ -58,14 +58,13 @@ export const authConfig = {
   },
   callbacks: {
     async session({ session, token }: any) {
-      console.log("Session callback:", session, token);
-      if (token) {
-        session.user.id = token.id;
-      }
+      // console.log("Session callback:", session, token);
+      session.user.id = token.id;
+      console.log("Session callback:", session);
       return session;
     },
     async jwt({ token, user, account }: any) {
-      // console.log("JWT callback:", token, user, account);
+      console.log("JWT callback:", token, user, account);
       if (user) {
         token.id = user.id;
       } else {

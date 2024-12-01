@@ -18,7 +18,7 @@ model User{
   email    String   @unique
   name     String
   password String?
-  profileImage String @default("https://www.gravatar.com/avatar")
+  profileImage String @default("https://via.placeholder.com/150")
   verified Boolean @default(false)
   zaps Zap[]
 }
@@ -49,16 +49,16 @@ model Trigger{
   id String @id @default(uuid())
   zapId String @unique
   zap Zap @relation(fields: [zapId],references: [id])
-  metadata Json
+  metadata Json @default("{}")
   availableTriggerId String
   availableTrigger AvailableTriggers @relation(fields: [availableTriggerId],references: [id])
 }
 
 model Action{
   id String @id @default(uuid())
-  zapId String
+  zapId String 
   zap Zap @relation(fields: [zapId],references: [id])
-  metadata Json
+  metadata Json @default("{}")
   availableActionId String
   availableAction AvailableActions @relation(fields: [availableActionId],references: [id])
   sortingOrder Int @default(0)
