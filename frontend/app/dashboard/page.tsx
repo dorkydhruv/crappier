@@ -27,7 +27,11 @@ export default function Page() {
       <main className='flex-1 p-6 overflow-hidden border-t'>
         <div className='mb-6 flex items-center justify-between'>
           <h2 className='text-2xl font-bold'>My Automations</h2>
-          <Button>
+          <Button
+            onClick={() => {
+              router.push("/zap/create");
+            }}
+          >
             <Plus className='mr-2 h-4 w-4' /> Create Automation
           </Button>
         </div>
