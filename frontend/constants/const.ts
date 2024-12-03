@@ -4,3 +4,5 @@ export const connection = new Connection(clusterApiUrl("devnet"));
 export const PROGRAM_ID = new PublicKey(
   "5TtSuWwcCr5ww4Kef2aYsvT8uF9H1hHGyC7fhsCwAaUx"
 );
+
+export const BASE_URL = "http://localhost:3000";

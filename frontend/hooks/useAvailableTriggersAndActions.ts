@@ -9,20 +9,22 @@ export interface AvailableNodeType {
 }
 
 export function useAvailableTriggersAndActions() {
-  const [avaialableTriggers, setAvailableTriggers] = useState<
+  const [availableTriggers, setAvailableTriggers] = useState<
     AvailableNodeType[]
   >([]);
   const [availableActions, setAvailableActions] = useState<AvailableNodeType[]>(
     []
   );
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     axios.get("/api/triggers").then((response) => {
       setAvailableTriggers(response.data);
     });
     axios.get("/api/actions").then((response) => {
       setAvailableActions(response.data);
+      setLoading(false);
     });
   }, []);
 
-  return { avaialableTriggers, availableActions };
+  return { availableTriggers, availableActions, loading };
 }
