@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const latestRequests = new Map<string, any>();
+const latestRequests = new Map<string, object>();
 
 export const POST = async (
   req: NextRequest,
@@ -9,7 +9,7 @@ export const POST = async (
   const params = await props.params;
   try {
     const hookId = params.id;
-    const body = await req.json();
+    const body: object = await req.json();
     latestRequests.set(hookId[0], body);
     return NextResponse.json(body);
   } catch (e) {

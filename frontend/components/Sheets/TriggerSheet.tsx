@@ -24,7 +24,7 @@ export const TriggerSheet = ({
   handleMetadataChange: (updatedData: Partial<TriggerData>) => void;
 }) => {
   const [hookId] = useState(nanoid());
-  const [response, setResponse] = useState<any>(null);
+  const [response, setResponse] = useState<Response | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export const TriggerSheet = ({
     }, 10000);
 
     return () => clearInterval(pollInterval);
-  }, [hookId]);
+  }, [hookId, handleMetadataChange]);
 
   return (
     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
@@ -55,7 +55,7 @@ export const TriggerSheet = ({
           </div>
           <div
             className='w-4 h-4 cursor-pointer'
-            onClick={(e) => {
+            onClick={() => {
               navigator.clipboard.writeText(`${BASE_URL}/api/hook/${hookId}`);
               toast({
                 title: "Copied to clipboard",

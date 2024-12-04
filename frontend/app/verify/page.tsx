@@ -1,11 +1,10 @@
 "use client";
-import { validateToken } from "@/lib/functions/validateToken";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 
-export default function VerifyPage() {
+function VerifyPageContent() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("Verifying, please wait...");
 
@@ -36,20 +35,15 @@ export default function VerifyPage() {
         }
         setLoading(false);
       });
-  }, [token]);
+  }, [token, router]);
 
+  return <div>{loading ? <p>Loading...</p> : <p>{message}</p>}</div>;
+}
+
+export default function VerifyPage() {
   return (
-    <div className='flex items-center justify-center min-h-screen bg-gray-900'>
-      {loading ? (
-        <div className='text-center flex justify-center gap-10'>
-          <div className='w-16 h-16 border-4 border-white border-t-transparent border-solid rounded-full animate-spin'></div>
-          <p className='mt-4 text-white text-xl'>{message}</p>
-        </div>
-      ) : (
-        <div className='text-center'>
-          <p className='text-white text-xl'>{message}</p>
-        </div>
-      )}
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyPageContent />
+    </Suspense>
   );
 }

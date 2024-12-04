@@ -4,7 +4,6 @@ import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { nanoid } from "nanoid";
 import { Button } from "../ui/button";
 import { useContext, useState } from "react";
-import { ZapContext } from "../../app/zap/create/page";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -14,16 +13,17 @@ import {
 import { AvailableNodeType } from "@/hooks/useAvailableTriggersAndActions";
 import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
 import { TriggerSheet } from "../Sheets/TriggerSheet";
+import { ZapContext } from "@/context/ZapContext";
 
 export interface TriggerData {
   name: string;
   description?: string;
   id: string;
-  metadata?: Object;
+  metadata?: object;
   image: string;
 }
 
-//@ts-ignore
+//@ts-expect-error("TODO: Fix this")
 export const TriggerNode = (props) => {
   const { data, id } = props;
   const reactFlowInstance = useReactFlow();

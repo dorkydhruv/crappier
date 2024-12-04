@@ -12,13 +12,13 @@ import { Loader } from "@/components/Loader";
 export interface Zap {
   name: string;
   id: string;
-  description: string;
+  description?: string;
   trigger: {
     id: string;
     availableTrigger: {
       name: string;
       image: string;
-      description: string;
+      description?: string;
     };
   };
   actions: {
@@ -26,14 +26,14 @@ export interface Zap {
     availableAction: {
       name: string;
       image: string;
-      description: string;
+      description?: string;
     };
   }[];
 }
 
 export default function Page() {
   const { toast } = useToast();
-  const { data, status, update } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const [zaps, setZaps] = React.useState<Zap[]>([]);
   const [loading, setLoading] = React.useState(false);

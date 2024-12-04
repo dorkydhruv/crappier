@@ -4,7 +4,6 @@ import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { nanoid } from "nanoid";
 import { Button } from "../ui/button";
 import { useContext, useState } from "react";
-import { ZapContext } from "../../app/zap/create/page";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -13,25 +12,26 @@ import {
 } from "@/components/ui/alert-dialog";
 import { AvailableNodeType } from "@/hooks/useAvailableTriggersAndActions";
 import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
-import {  SolanaActionSheet } from "../Sheets/SolanaActionSheet";
+import { SolanaActionSheet } from "../Sheets/SolanaActionSheet";
 import EmailActionSheet from "../Sheets/EmailActionSheet";
+import { ZapContext } from "@/context/ZapContext";
 
 export interface ActionData {
   name: string;
   description?: string;
   id: string;
-  metadata?: Object;
+  metadata?: object;
   image: string;
 }
 
-//@ts-ignore
+//@ts-expect-error("TODO: Fix this")
 export const ActionNode = (props) => {
   const { data, id } = props;
   const reactFlowInstance = useReactFlow();
   const [open, setOpen] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  //@ts-ignore
   const { availableActions }: { availableActions: AvailableNodeType[] } =
+    //ts-expect-error("TODO: Fix this")
     useContext(ZapContext);
 
   const isLastNode = !reactFlowInstance
@@ -161,8 +161,22 @@ export const ActionNode = (props) => {
               </div>
             </AlertDialogContent>
           </AlertDialog>
-          {data.id==="solana" && <SolanaActionSheet isSheetOpen={isSheetOpen} setIsSheetOpen={setIsSheetOpen} handleMetadataChange={handleMetadataChange} actionData={data} />}
-          {data.id==="email"&& <EmailActionSheet isSheetOpen={isSheetOpen} setIsSheetOpen={setIsSheetOpen} handleMetadataChange={handleMetadataChange} actionData={data} />}
+          {data.id === "solana" && (
+            <SolanaActionSheet
+              isSheetOpen={isSheetOpen}
+              setIsSheetOpen={setIsSheetOpen}
+              handleMetadataChange={handleMetadataChange}
+              actionData={data}
+            />
+          )}
+          {data.id === "email" && (
+            <EmailActionSheet
+              isSheetOpen={isSheetOpen}
+              setIsSheetOpen={setIsSheetOpen}
+              handleMetadataChange={handleMetadataChange}
+              actionData={data}
+            />
+          )}
         </>
       )}
     </div>

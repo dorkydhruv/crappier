@@ -14,7 +14,7 @@ export const fundPotTx = async ({
   fromPublickey: PublicKey;
   email: string;
 }) => {
-  const [potAccount, potBump] = PublicKey.findProgramAddressSync(
+  const [potAccount] = PublicKey.findProgramAddressSync(
     [Buffer.from("pot"), Buffer.from(email)],
     PROGRAM_ID
   );

@@ -1,5 +1,5 @@
 "use client";
-import { CookingPot, Zap } from "lucide-react";
+import { Zap } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
@@ -9,7 +9,7 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { FundPot } from "./FundPot";
 
 export function Appbar() {
-  const { data, status, update } = useSession();
+  const { data, status } = useSession();
   const router = useRouter();
   return (
     <div className='px-4 lg:px-6 h-14 flex items-center'>

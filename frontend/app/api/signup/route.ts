@@ -44,10 +44,6 @@ export const POST = async (req: NextRequest) => {
     });
   } catch (error) {
     // console.error(error);
-    return NextResponse.json({ message: "Internal server error" });
+    return NextResponse.json({ message: `Internal server error: ${error}` });
   }
-};
-
-export const GET = async (req: NextRequest) => {
-  return NextResponse.json({ message: "Signup route" });
 };

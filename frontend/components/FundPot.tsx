@@ -50,7 +50,7 @@ export const FundPot = (user: { email: string }) => {
           ),
       });
     } catch (error) {
-      toast({ title: "Transaction failed" });
+      toast({ title: `Transaction failed: ${error}` });
     } finally {
       setLoading(false);
     }

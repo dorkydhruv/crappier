@@ -1,7 +1,7 @@
 import prisma from "@/lib/db";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest) => {
+export const GET = async () => {
   const availableTriggers = await prisma.availableTriggers.findMany({});
   return NextResponse.json(availableTriggers);
 };

@@ -10,9 +10,11 @@ import {
 } from "./ui/card";
 import { useRouter } from "next/navigation";
 import { GITHUB_URL } from "@/constants/const";
+import { useSession } from "next-auth/react";
 
 export const Hero = () => {
   const router = useRouter();
+  const { data } = useSession();
   return (
     <main className='flex-1'>
       <section className='w-full py-12 md:py-24 lg:py-32 xl:py-48'>
@@ -30,7 +32,8 @@ export const Hero = () => {
             <div className='space-x-4'>
               <Button
                 onClick={() => {
-                  router.push("/signup");
+                  if (data?.user?.email) router.push("/dashboard");
+                  else router.push("/signup");
                 }}
               >
                 Get Started
@@ -141,7 +144,13 @@ export const Hero = () => {
                 transactions with email notifications and webhook triggers.
               </p>
             </div>
-            <Button className='flex items-center'>
+            <Button
+              className='flex items-center'
+              onClick={() => {
+                if (data?.user?.email) router.push("/dashboard");
+                else router.push("/signup");
+              }}
+            >
               Get Started
               <ArrowRight className='ml-2 h-4 w-4' />
             </Button>

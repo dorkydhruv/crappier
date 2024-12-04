@@ -4,7 +4,6 @@ import {
   Background,
   BackgroundVariant,
   Controls,
-  MiniMap,
   Node,
   ReactFlow,
   useEdgesState,
@@ -16,7 +15,7 @@ import {
   useAvailableTriggersAndActions,
 } from "@/hooks/useAvailableTriggersAndActions";
 import { nanoid } from "nanoid";
-import { createContext, useState } from "react";
+import { useState } from "react";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -37,13 +36,9 @@ import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
 import { Loader } from "@/components/Loader";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { ZapContext } from "@/context/ZapContext";
 
 // Remove the initialNodes constant as we'll set it dynamically
-
-export const ZapContext = createContext({
-  availableTriggers: [],
-  availableActions: [],
-});
 
 export default function CreateZapPage() {
   const { availableTriggers, availableActions, loading } =
@@ -55,7 +50,7 @@ export default function CreateZapPage() {
 
   const handleTriggerSelect = (trigger: AvailableNodeType) => {
     setNodes([
-      // @ts-ignore
+      //@ts-expect-error("React-Flow `never` issue")
       {
         id: nanoid(),
         type: "trigger",
@@ -72,14 +67,14 @@ export default function CreateZapPage() {
   };
 
   const onConnect = useCallback(
-    //@ts-ignore
+    //@ts-expect-error("React-Flow `never` issue")
     (params) => {
       const edge = {
         id: nanoid(),
         source: params.source,
         target: params.target,
       };
-      //@ts-ignore
+      //@ts-expect-error("React-Flow `never` issue")
       setEdges((edges) => addEdge(edge, edges));
     },
     [nodes]
@@ -89,7 +84,7 @@ export default function CreateZapPage() {
     const sortedNodes: Node[] = [];
 
     // Collect nodes starting from the trigger
-    //@ts-ignore
+    //@ts-expect-error("React-Flow `never` issue")
     const triggerNode = nodes.find((node) => node.type === "trigger");
     if (!triggerNode) {
       console.error("No trigger node found");
@@ -98,11 +93,11 @@ export default function CreateZapPage() {
     let currentNode = triggerNode;
     while (currentNode) {
       sortedNodes.push(currentNode);
-      //@ts-ignore
+      //@ts-expect-error("React-Flow `never` issue")
       const nextEdge = edges.find((edge) => edge.source === currentNode.id);
-      //@ts-ignore
+      //@ts-expect-error("React-Flow `never` issue")
       currentNode = nextEdge
-        ? // @ts-ignore
+        ? //@ts-expect-error("React-Flow `never` issue")
           nodes.find((node) => node.id === nextEdge.target)
         : undefined;
     }
@@ -112,9 +107,9 @@ export default function CreateZapPage() {
     console.log(sortedNodes);
     console.log("Creating zap...");
     console.log({
-      // @ts-ignore
+      //@ts-expect-error("React-Flow `never` issue")
       availableTriggerId: triggerNode.data.id,
-      // @ts-ignore
+      //@ts-expect-error("React-Flow `never` issue")
       triggerMetadata: triggerNode.data.metadata,
       name: "From frontend",
       actions: sortedNodes
@@ -125,9 +120,9 @@ export default function CreateZapPage() {
         })),
     });
     const response = await axios.post("/api/zaps", {
-      // @ts-ignore
+      //@ts-expect-error("React-Flow `never` issue")
       availableTriggerId: triggerNode.data.id,
-      // @ts-ignore
+      //@ts-expect-error("React-Flow `never` issue")
       triggerMetadata: triggerNode.data.metadata,
       name: "From frontend",
       actions: sortedNodes
@@ -146,7 +141,7 @@ export default function CreateZapPage() {
   }
 
   return (
-    // @ts-ignore
+    //@ts-expect-error("React-Flow `never` issue")
     <ZapContext.Provider value={{ availableTriggers, availableActions }}>
       <div className='w-full h-screen relative'>
         <ReactFlow

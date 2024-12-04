@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { extractPaths } from '@/utils/utils';
+import React, { useState, useEffect } from "react";
+import { extractPaths } from "@/utils/utils";
 
 interface AutoSuggestInputProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  triggerMetadata: any;
+  triggerMetadata: object;
 }
 
 export const AutoSuggestInput: React.FC<AutoSuggestInputProps> = ({
@@ -28,7 +28,7 @@ export const AutoSuggestInput: React.FC<AutoSuggestInputProps> = ({
     const inputValue = e.target.value;
     onChange(inputValue);
 
-    if (inputValue.includes('{')) {
+    if (inputValue.includes("{")) {
       setShowSuggestions(true);
     } else {
       setShowSuggestions(false);
