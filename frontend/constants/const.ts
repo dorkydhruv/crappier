@@ -5,4 +5,4 @@ export const PROGRAM_ID = new PublicKey(
   "5TtSuWwcCr5ww4Kef2aYsvT8uF9H1hHGyC7fhsCwAaUx"
 );
 
-export const BASE_URL = "http://localhost:3000";
+export const BASE_URL = process.env.NEXTAUTH_URL || "http://localhost:3000";
