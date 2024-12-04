@@ -60,11 +60,11 @@ export const authConfig = {
     async session({ session, token }: any) {
       // console.log("Session callback:", session, token);
       session.user.id = token.id;
-      console.log("Session callback:", session);
+      // console.log("Session callback:", session);
       return session;
     },
     async jwt({ token, user, account }: any) {
-      console.log("JWT callback:", token, user, account);
+      // console.log("JWT callback:", token, user, account);
       if (user) {
         token.id = user.id;
       } else {
@@ -78,7 +78,7 @@ export const authConfig = {
       return token;
     },
     async redirect({ url, baseUrl }: any) {
-      console.log("Redirect callback:", url, baseUrl);
+      // console.log("Redirect callback:", url, baseUrl);
       if (url === "/dashboard") {
         console.log(
           "Redirecting to dashboard -----------------------------------------------------"

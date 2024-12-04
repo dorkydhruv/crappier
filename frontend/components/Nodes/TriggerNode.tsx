@@ -19,13 +19,12 @@ export interface TriggerData {
   name: string;
   description?: string;
   id: string;
-  metaData?: Object;
+  metadata?: Object;
   image: string;
 }
 
 //@ts-ignore
 export const TriggerNode = (props) => {
-  const [hookId] = useState(nanoid());
   const { data, id } = props;
   const reactFlowInstance = useReactFlow();
   const { availableActions }: { availableActions: AvailableNodeType[] } =

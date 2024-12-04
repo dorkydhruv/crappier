@@ -10,8 +10,9 @@ import {
   SheetDescription,
 } from "../ui/sheet";
 import { TriggerData } from "../Nodes/TriggerNode";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
 
 export const TriggerSheet = ({
   isSheetOpen,
@@ -23,8 +24,22 @@ export const TriggerSheet = ({
   handleMetadataChange: (updatedData: Partial<TriggerData>) => void;
 }) => {
   const [hookId] = useState(nanoid());
-
+  const [response, setResponse] = useState<any>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const pollInterval = setInterval(async () => {
+      const res = await axios.get(`${BASE_URL}/api/hook/${hookId}`);
+      const data = await res.data;
+      if (data) {
+        setResponse(data);
+        handleMetadataChange({ metadata: data });
+      }
+    }, 10000);
+
+    return () => clearInterval(pollInterval);
+  }, [hookId]);
+
   return (
     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
       <SheetContent>
@@ -32,7 +47,7 @@ export const TriggerSheet = ({
           <SheetTitle>Configure Trigger</SheetTitle>
         </SheetHeader>
         <SheetDescription>
-          Test your response by hitting this endpoint below. <br></br>
+          Test your response by hitting this endpoint below.
         </SheetDescription>
         <div className=' border-2 p-3 max-w-md flex gap-2 my-2 justify-center items-center'>
           <div className='text-sm text-slate-600 max-w-xs overflow-hidden'>
@@ -52,6 +67,11 @@ export const TriggerSheet = ({
         </div>
         <div>
           Response:
+          <pre className='mt-2 p-4 bg-slate-100 rounded-md overflow-auto'>
+            {response
+              ? JSON.stringify(response, null, 2)
+              : "No requests received yet"}
+          </pre>
         </div>
       </SheetContent>
     </Sheet>

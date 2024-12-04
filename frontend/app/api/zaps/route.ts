@@ -14,8 +14,16 @@ export const GET = async (req: NextRequest) => {
       userId: session.user.id,
     },
     include: {
-      actions: true,
-      trigger: true,
+      actions: {
+        include: {
+          availableAction: true,
+        },
+      },
+      trigger: {
+        include: {
+          availableTrigger: true,
+        },
+      },
     },
   });
   return NextResponse.json(zaps);

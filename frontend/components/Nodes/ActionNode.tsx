@@ -13,13 +13,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { AvailableNodeType } from "@/hooks/useAvailableTriggersAndActions";
 import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {  SolanaActionSheet } from "../Sheets/SolanaActionSheet";
+import EmailActionSheet from "../Sheets/EmailActionSheet";
 
 export interface ActionData {
   name: string;
   description?: string;
   id: string;
-  metaData?: Object;
+  metadata?: Object;
   image: string;
 }
 
@@ -93,10 +94,7 @@ export const ActionNode = (props) => {
   };
 
   return (
-    <div
-      
-      className='px-6 py-3 border-2 bg-white shadow-md rounded-lg border-stone-500 min-w-[200px]'
-    >
+    <div className='px-6 py-3 border-2 bg-white shadow-md rounded-lg border-stone-500 min-w-[200px]'>
       <div className='flex items-center gap-3' onClick={onNodeClick}>
         <img src={data.image} className='w-8 h-8' alt='action' />
         <div className='flex-1'>
@@ -131,7 +129,7 @@ export const ActionNode = (props) => {
                 <AlertDialogTitle className='text-xl mb-4'>
                   Select an Action
                 </AlertDialogTitle>
-                <AlertDialogDescription className="text-gray-600 mb-4">
+                <AlertDialogDescription className='text-gray-600 mb-4'>
                   Choose an action to add to your workflow
                 </AlertDialogDescription>
               </AlertDialogHeader>
@@ -163,51 +161,10 @@ export const ActionNode = (props) => {
               </div>
             </AlertDialogContent>
           </AlertDialog>
+          {data.id==="solana" && <SolanaActionSheet isSheetOpen={isSheetOpen} setIsSheetOpen={setIsSheetOpen} handleMetadataChange={handleMetadataChange} actionData={data} />}
+          {data.id==="email"&& <EmailActionSheet isSheetOpen={isSheetOpen} setIsSheetOpen={setIsSheetOpen} handleMetadataChange={handleMetadataChange} actionData={data} />}
         </>
       )}
-      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Edit Action Node</SheetTitle>
-          </SheetHeader>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(e.target as HTMLFormElement);
-              const updatedData = {
-                name: formData.get('name') as string,
-                description: formData.get('description') as string,
-                // Add other fields as necessary
-              };
-              handleMetadataChange(updatedData);
-            }}
-          >
-            <div className='mb-4'>
-              <label className='block text-sm font-medium text-gray-700'>Name</label>
-              <input
-                name='name'
-                defaultValue={data.name}
-                className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm'
-              />
-            </div>
-            <div className='mb-4'>
-              <label className='block text-sm font-medium text-gray-700'>Description</label>
-              <textarea
-                name='description'
-                defaultValue={data.description}
-                className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm'
-              />
-            </div>
-            {/* Add other form fields as needed */}
-            <button
-              type='submit'
-              className='px-4 py-2 bg-blue-600 text-white rounded-md'
-            >
-              Save
-            </button>
-          </form>
-        </SheetContent>
-      </Sheet>
     </div>
   );
 };
