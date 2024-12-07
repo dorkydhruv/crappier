@@ -39,37 +39,54 @@ export const POST = async (req: NextRequest) => {
   if (!parsedBody.success) {
     return NextResponse.json({ error: parsedBody.error });
   }
-  const zapId = await prisma.$transaction(async (tx) => {
-    const zap = await tx.zap.create({
-      data: {
-        name: parsedBody.data.name,
-        actions: {
-          create: parsedBody.data.actions.map((action, index) => ({
-            availableActionId: action.availableActionId,
-            metadata: action.actionMetadata ?? {},
-            sortingOrder: index,
-          })),
+  console.log(parsedBody.data);
+  try {
+    // Ensure the user exists in the database
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" });
+    }
+
+    // Create the zap with the valid userId
+    const zapId = await prisma.$transaction(async (tx) => {
+      const zap = await tx.zap.create({
+        data: {
+          name: parsedBody.data.name,
+          actions: {
+            create: parsedBody.data.actions.map((action, index) => ({
+              availableActionId: action.availableActionId,
+              metadata: action.actionMetadata ?? {},
+              sortingOrder: index,
+            })),
+          },
+          userId: session.user.id,
+          triggerId: "",
         },
-        userId: session.user.id,
-        triggerId: "",
-      },
+      });
+      const trigger = await tx.trigger.create({
+        data: {
+          availableTriggerId: parsedBody.data.availableTriggerId,
+          metadata: parsedBody.data.triggerMetadata ?? {},
+          zapId: zap.id,
+        },
+      });
+      await tx.zap.update({
+        where: {
+          id: zap.id,
+        },
+        data: {
+          triggerId: trigger.id,
+        },
+      });
+      return zap.id;
     });
-    const trigger = await tx.trigger.create({
-      data: {
-        availableTriggerId: parsedBody.data.availableTriggerId,
-        metadata: parsedBody.data.triggerMetadata ?? {},
-        zapId: zap.id,
-      },
-    });
-    await tx.zap.update({
-      where: {
-        id: zap.id,
-      },
-      data: {
-        triggerId: trigger.id,
-      },
-    });
-    return zap.id;
-  });
-  return NextResponse.json({ id: zapId });
+
+    return NextResponse.json(zapId);
+  } catch (error) {
+    console.error("Error creating zap:", error);
+    return NextResponse.json({ error: "Failed to create zap" });
+  }
 };
