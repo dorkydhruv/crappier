@@ -83,6 +83,22 @@ export default function Page() {
             </div>
           ))}
         </div>
+        <Button
+          onClick={async () => {
+            const response = await axios.post("/api/zaps", {
+              availableTriggerId: "123",
+              name: "Test",
+              actions: [
+                {
+                  availableActionId: "123",
+                },
+              ],
+            });
+            console.log(response);
+          }}
+        >
+          Click me
+        </Button>
       </main>
     </div>
   );
