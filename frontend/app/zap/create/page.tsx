@@ -37,6 +37,7 @@ import { Loader } from "@/components/Loader";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { ZapContext } from "@/context/ZapContext";
+import { Input } from "@/components/ui/input";
 
 // Remove the initialNodes constant as we'll set it dynamically
 
@@ -47,7 +48,7 @@ export default function CreateZapPage() {
   const router = useRouter();
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [showTriggerDialog, setShowTriggerDialog] = useState(true);
-
+  const [name, setName] = useState("Untitled Zap");
   const handleTriggerSelect = (trigger: AvailableNodeType) => {
     setNodes([
       //@ts-expect-error("React-Flow `never` issue")
@@ -77,7 +78,7 @@ export default function CreateZapPage() {
       //@ts-expect-error("React-Flow `never` issue")
       setEdges((edges) => addEdge(edge, edges));
     },
-    [nodes]
+    [nodes, setEdges]
   );
 
   const executeZap = async () => {
@@ -124,7 +125,7 @@ export default function CreateZapPage() {
       availableTriggerId: triggerNode.data.id,
       //@ts-expect-error("React-Flow `never` issue")
       triggerMetadata: triggerNode.data.metadata,
-      name: "From frontend",
+      name: name,
       actions: sortedNodes
         .filter((node) => node.type === "action")
         .map((node) => ({
@@ -162,7 +163,6 @@ export default function CreateZapPage() {
           />
           <Controls />
         </ReactFlow>
-
         <AlertDialog
           open={showTriggerDialog}
           onOpenChange={setShowTriggerDialog}
@@ -200,7 +200,6 @@ export default function CreateZapPage() {
             </div>
           </AlertDialogContent>
         </AlertDialog>
-
         <div className='absolute top-0 left-0 right-0 bottom-0 pointer-events-none'>
           <Button
             className='absolute bottom-5 left-1/2 transform -translate-x-1/2 pointer-events-auto'
@@ -208,6 +207,15 @@ export default function CreateZapPage() {
           >
             Execute Zap ⚡
           </Button>
+        </div>
+        <div className='absolute top-0 left-0 right-0 bottom-0 pointer-events-none'>
+          <div className=' rounded-xl m-2 h-10 max-w-md bg-white pointer-events-auto'>
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder='Name your zap'
+            />
+          </div>
         </div>
       </div>
     </ZapContext.Provider>

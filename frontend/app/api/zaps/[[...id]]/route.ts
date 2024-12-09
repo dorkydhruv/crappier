@@ -66,3 +66,35 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({ error: `Error: ${error}` });
   }
 };
+
+export const DELETE = async (
+  req: NextRequest,
+  props: { params: Promise<{ id: string }> }
+) => {
+  const params = await props.params;
+  const zapId = params.id[0];
+  const session = await getServerSession(authConfig);
+  if (!session || !session.user?.email) {
+    return NextResponse.redirect(new URL("/signin", req.url));
+  }
+  try {
+    await prisma.action.deleteMany({
+      where: {
+        zapId: zapId,
+      },
+    });
+    await prisma.trigger.delete({
+      where: {
+        zapId: zapId,
+      },
+    });
+    await prisma.zap.delete({
+      where: {
+        id: zapId,
+      },
+    });
+    return NextResponse.json({ message: "Zap deleted" });
+  } catch (error) {
+    return NextResponse.json({ message: `Error: ${error}` });
+  }
+};

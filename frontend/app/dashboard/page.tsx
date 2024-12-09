@@ -8,7 +8,6 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { Loader } from "@/components/Loader";
-
 export interface Zap {
   name: string;
   id: string;
@@ -57,6 +56,22 @@ export default function Page() {
     return <Loader />;
   }
 
+  async function deleteZap(id: string) {
+    try {
+      const res = await axios.delete(`/api/zaps/${id}`);
+      toast({
+        title: "Zap deleted",
+        description: res.data.message,
+      });
+      setLoading(true);
+    } catch (e) {
+      toast({
+        title: "Error",
+        description: `Failed to delete zap: ${e}`,
+      });
+    }
+  }
+
   return (
     <div className='flex h-screen flex-col'>
       <Appbar />
@@ -80,25 +95,34 @@ export default function Page() {
                   {zap.trigger.availableTrigger.name}
                 </h2>
               </div>
+              <div className='flex justify-between'>
+                <div className='flex gap-2'>
+                  {zap.actions.map((action) => (
+                    <div key={action.id}>
+                      <img
+                        src={action.availableAction.image}
+                        alt={action.availableAction.name}
+                        className='h-8 w-8'
+                      />
+                    </div>
+                  ))}
+                </div>
+                {/* <img
+                  src={zap.trigger.availableTrigger.image}
+                  alt={zap.trigger.availableTrigger.name}
+                  className='h-8 w-8'
+                /> */}
+                <Button
+                  variant={"outline"}
+                  size='sm'
+                  onClick={async () => deleteZap(zap.id)}
+                >
+                  Delete
+                </Button>
+              </div>
             </div>
           ))}
         </div>
-        <Button
-          onClick={async () => {
-            const response = await axios.post("/api/zaps", {
-              availableTriggerId: "123",
-              name: "Test",
-              actions: [
-                {
-                  availableActionId: "123",
-                },
-              ],
-            });
-            console.log(response);
-          }}
-        >
-          Click me
-        </Button>
       </main>
     </div>
   );
