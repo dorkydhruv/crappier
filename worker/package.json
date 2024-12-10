@@ -1,0 +1,22 @@
+{
+  "name": "worker",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "tsc -b && node dist/index.js"
+  },
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "6.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "kafka": "^0.2.3",
+    "kafkajs": "^2.2.4",
+    "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "prisma": "6.0.1"
+  }
+}

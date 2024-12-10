@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id       String   @id @default(uuid())
+  email    String   @unique
+  name     String
+  password String?
+  profileImage String @default("https://via.placeholder.com/150")
+  verified Boolean @default(false)
+  zaps Zap[]
+}
+
+model VerificationToken{
+  id String @id @default(uuid())
+  token String
+  email String
+  expiresAt DateTime
+
+  @@unique([token, email])
+}
+
+// Zap --> 1 Trigger and multiple actions
+model Zap{
+  id String @id @default(uuid())
+  name String @default("Untitled Zap")
+  description String?
+  trigger Trigger?
+  actions Action[]
+  userId String
+  user User @relation(fields: [userId],references: [id])
+  zapRuns ZapRun[]
+}
+
+model Trigger{
+  id String @id @default(uuid())
+  zapId String @unique
+  zap Zap @relation(fields: [zapId],references: [id])
+  metadata Json @default("{}")
+  availableTriggerId String
+  availableTrigger AvailableTriggers @relation(fields: [availableTriggerId],references: [id])
+}
+
+model Action{
+  id String @id @default(uuid())
+  zapId String 
+  zap Zap @relation(fields: [zapId],references: [id])
+  metadata Json @default("{}")
+  availableActionId String
+  availableAction AvailableActions @relation(fields: [availableActionId],references: [id])
+  sortingOrder Int @default(0)
+}
+
+// Supporting actions --> Email and solana transactions
+model AvailableActions{
+  id String @id @default(uuid())
+  name String
+  image String 
+  description String?
+  actions Action[]
+}
+
+// Supporting triggers --> webhook
+model AvailableTriggers{
+  id String @id @default(uuid())
+  name String
+  image String
+  description String?
+  triggers Trigger[]
+}
+
+model ZapRun{
+  id String @default(uuid()) @id
+  zapId String
+  zap Zap @relation(fields: [zapId],references: [id])
+  payload Json
+  ZapRunOutbox ZapRunOutbox?
+}
+
+model ZapRunOutbox{
+  id String @default(uuid()) @id
+  zapRunId String @unique
+  zapRun ZapRun @relation(fields: [zapRunId],references: [id])
+}
