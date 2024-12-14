@@ -16,7 +16,8 @@ export async function consumer() {
   await consumer.run({
     // autoCommit: false,
     eachMessage: async ({ topic, partition, message }) => {
-      console.log("message", message.value?.toString());
+      console.log("message", message);
+      console.log("message.value :", message.value?.toString());
     },
   });
 }
