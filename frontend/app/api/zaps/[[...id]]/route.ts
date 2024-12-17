@@ -9,9 +9,16 @@ export const GET = async (req: NextRequest) => {
   if (!session || !session.user?.email) {
     return NextResponse.redirect(new URL("/signin", req.url));
   }
+  // Retrieve the user from the database
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+  });
+  if (!user) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
   const zaps = await prisma.zap.findMany({
     where: {
-      userId: session.user.id,
+      userId: user.id,
     },
     include: {
       actions: {
@@ -34,6 +41,15 @@ export const POST = async (req: NextRequest) => {
   if (!session || !session.user?.email) {
     return NextResponse.redirect(new URL("/signin", req.url));
   }
+
+  // Retrieve the user from the database
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+  });
+  if (!user) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
   const payload = await req.json();
   const parsedBody = ZapSchema.safeParse(payload);
   if (!parsedBody.success) {
@@ -51,7 +67,7 @@ export const POST = async (req: NextRequest) => {
             metadata: parsedBody.data.triggerMetadata ?? {},
           },
         },
-        userId: session.user.id,
+        userId: user.id, // Use user.id instead of session.user.id
         actions: {
           create: parsedBody.data.actions.map((action) => ({
             availableActionId: action.availableActionId,

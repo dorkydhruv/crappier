@@ -44,13 +44,22 @@ export default function Page() {
     router.replace("/signin");
   }
 
-  React.useMemo(() => {
-    setLoading(loading);
-    axios.get("/api/zaps").then((response) => {
-      setZaps(response.data);
-      setLoading(false);
-    });
-  }, [loading]);
+  React.useEffect(() => {
+    setLoading(true);
+    axios
+      .get("/api/zaps")
+      .then((response) => {
+        setZaps(response.data);
+        setLoading(false);
+      })
+      .catch((e) => {
+        toast({
+          title: "Error",
+          description: `Failed to fetch zaps: ${e}`,
+        });
+        setLoading(false);
+      });
+  }, []);
 
   if (loading || !zaps) {
     return <Loader />;
@@ -87,6 +96,12 @@ export default function Page() {
           </Button>
         </div>
         <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
+          {zaps.length === 0 && (
+            <div className='text-center text-gray-500 flex items-center justify-center h-32'>
+              You have not created any automations yet. Click on the button
+              above.
+            </div>
+          )}
           {zaps.map((zap, index) => (
             <div key={index} className='rounded-lg border p-4 shadow-sm'>
               <div className='mb-2 flex items-center justify-between'>
