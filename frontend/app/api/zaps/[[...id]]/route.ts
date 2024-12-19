@@ -67,7 +67,7 @@ export const POST = async (req: NextRequest) => {
             metadata: parsedBody.data.triggerMetadata ?? {},
           },
         },
-        userId: user.id, // Use user.id instead of session.user.id
+        userId: user.id,
         actions: {
           create: parsedBody.data.actions.map((action) => ({
             availableActionId: action.availableActionId,

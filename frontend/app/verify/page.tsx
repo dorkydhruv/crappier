@@ -9,7 +9,6 @@ function VerifyPageContent() {
   const [message, setMessage] = useState("Verifying, please wait...");
 
   const router = useRouter();
-
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
@@ -21,9 +20,7 @@ function VerifyPageContent() {
       return;
     }
     axios
-      .post("/api/verify", {
-        token,
-      })
+      .post("/api/verify", { token })
       .then((res) => {
         setLoading(false);
         if (res.data.response) {
@@ -33,16 +30,19 @@ function VerifyPageContent() {
           setMessage("Account verification failed");
           setTimeout(() => router.push("/"), 2000);
         }
-        setLoading(false);
       });
   }, [token, router]);
 
-  return <div>{loading ? <p>Loading...</p> : <p>{message}</p>}</div>;
+  return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", flexDirection: "column" }}>
+      {loading ? <p style={{ fontSize: "1.5rem", color: "#0070f3" }}>Loading...</p> : <p style={{ fontSize: "1.5rem", color: "#0070f3" }}>{message}</p>}
+    </div>
+  );
 }
 
 export default function VerifyPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>Loading...</div>}>
       <VerifyPageContent />
     </Suspense>
   );

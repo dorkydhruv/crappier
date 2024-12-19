@@ -8,6 +8,7 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { Loader } from "@/components/Loader";
+import { set } from "zod";
 export interface Zap {
   name: string;
   id: string;
@@ -36,6 +37,7 @@ export default function Page() {
   const router = useRouter();
   const [zaps, setZaps] = React.useState<Zap[]>([]);
   const [loading, setLoading] = React.useState(false);
+  const [shouldFetch, setShouldFetch] = React.useState(true);
   if (status === "unauthenticated") {
     toast({
       title: "You are not authenticated",
@@ -45,11 +47,13 @@ export default function Page() {
   }
 
   React.useEffect(() => {
+    if (!shouldFetch) return;
     setLoading(true);
     axios
       .get("/api/zaps")
       .then((response) => {
         setZaps(response.data);
+        setShouldFetch(false);
         setLoading(false);
       })
       .catch((e) => {
@@ -58,8 +62,9 @@ export default function Page() {
           description: `Failed to fetch zaps: ${e}`,
         });
         setLoading(false);
+        setShouldFetch(false);
       });
-  }, []);
+  }, [shouldFetch]);
 
   if (loading || !zaps) {
     return <Loader />;
@@ -72,6 +77,7 @@ export default function Page() {
         title: "Zap deleted",
         description: res.data.message,
       });
+      setShouldFetch(true);
       setLoading(true);
     } catch (e) {
       toast({

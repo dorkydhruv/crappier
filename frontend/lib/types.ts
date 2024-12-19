@@ -14,11 +14,11 @@ export const LoginSchema = z.object({
 export const ZapSchema = z.object({
   availableTriggerId: z.string(),
   name: z.string().optional(),
-  triggerMetadata: z.object({}).optional(),
+  triggerMetadata: z.record(z.any()).optional(),
   actions: z.array(
     z.object({
       availableActionId: z.string(),
-      actionMetadata: z.object({}).optional(),
+      actionMetadata: z.record(z.any()).optional(),
     })
   ),
 });

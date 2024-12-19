@@ -45,8 +45,8 @@ const t = async () => {
   publisher();
   consumer();
   console.log("Worker is running");
-  app.listen(3000, () => {
-    console.log("Worker is running on port 3000");
+  app.listen(3001, () => {
+    console.log("Worker is running on port 3001");
   });
 };
 
