@@ -55,5 +55,5 @@ export const generateVerificationToken = async (email: string) => {
     },
   };
   const poller = await client.beginSend(emailMessage);
-  const result = await poller.pollUntilDone();
+  await poller.pollUntilDone();
 };

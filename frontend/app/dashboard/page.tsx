@@ -4,11 +4,10 @@ import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import * as React from "react";
-import { Plus } from "lucide-react";
+import { Copy, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { Loader } from "@/components/Loader";
-import { set } from "zod";
 export interface Zap {
   name: string;
   id: string;
@@ -29,6 +28,7 @@ export interface Zap {
       description?: string;
     };
   }[];
+  userId: string;
 }
 
 export default function Page() {
@@ -52,6 +52,7 @@ export default function Page() {
     axios
       .get("/api/zaps")
       .then((response) => {
+        console.log(response.data);
         setZaps(response.data);
         setShouldFetch(false);
         setLoading(false);
@@ -64,7 +65,7 @@ export default function Page() {
         setLoading(false);
         setShouldFetch(false);
       });
-  }, [shouldFetch]);
+  }, [shouldFetch, toast]);
 
   if (loading || !zaps) {
     return <Loader />;
@@ -112,9 +113,24 @@ export default function Page() {
             <div key={index} className='rounded-lg border p-4 shadow-sm'>
               <div className='mb-2 flex items-center justify-between'>
                 <h3 className='font-semibold'>{zap.name}</h3>
-                <h2 className='text-sm text-gray-500'>
-                  {zap.trigger.availableTrigger.name}
-                </h2>
+                <div className='flex gap-2 items-center'>
+                  <Copy
+                    size={20}
+                    className='cursor-pointer hover:ring-offset-card'
+                    onClick={() => {
+                      navigator.clipboard.writeText(
+                        `${process.env.WORKER_URL}/hook/${zap.id}/${zap.userId}`
+                      );
+                      toast({
+                        title: "Copied",
+                        description: "Webhook URL copied to clipboard",
+                      });
+                    }}
+                  />
+                  <h2 className='text-sm text-gray-500'>
+                    {zap.trigger.availableTrigger.name}
+                  </h2>
+                </div>
               </div>
               <div className='flex justify-between'>
                 <div className='flex gap-2'>
@@ -128,11 +144,7 @@ export default function Page() {
                     </div>
                   ))}
                 </div>
-                {/* <img
-                  src={zap.trigger.availableTrigger.image}
-                  alt={zap.trigger.availableTrigger.name}
-                  className='h-8 w-8'
-                /> */}
+
                 <Button
                   variant={"outline"}
                   size='sm'
