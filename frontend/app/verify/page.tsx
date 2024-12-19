@@ -19,30 +19,54 @@ function VerifyPageContent() {
       setTimeout(() => router.push("/"), 2000);
       return;
     }
-    axios
-      .post("/api/verify", { token })
-      .then((res) => {
-        setLoading(false);
-        if (res.data.response) {
-          setMessage("Account verified successfully");
-          setTimeout(() => router.push("/signin"), 2000);
-        } else {
-          setMessage("Account verification failed");
-          setTimeout(() => router.push("/"), 2000);
-        }
-      });
+    axios.post("/api/verify", { token }).then((res) => {
+      setLoading(false);
+      console.log("Verify: ", res.data);
+      if (res.data.response) {
+        setMessage("Account verified successfully");
+        setTimeout(() => router.push("/signin"), 2000);
+      } else {
+        setMessage("Account verification failed");
+        setTimeout(() => router.push("/"), 2000);
+      }
+    });
   }, [token, router]);
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", flexDirection: "column" }}>
-      {loading ? <p style={{ fontSize: "1.5rem", color: "#0070f3" }}>Loading...</p> : <p style={{ fontSize: "1.5rem", color: "#0070f3" }}>{message}</p>}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        flexDirection: "column",
+      }}
+    >
+      {loading ? (
+        <p style={{ fontSize: "1.5rem", color: "#0070f3" }}>Loading...</p>
+      ) : (
+        <p style={{ fontSize: "1.5rem", color: "#0070f3" }}>{message}</p>
+      )}
     </div>
   );
 }
 
 export default function VerifyPage() {
   return (
-    <Suspense fallback={<div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>Loading...</div>}>
+    <Suspense
+      fallback={
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          Loading...
+        </div>
+      }
+    >
       <VerifyPageContent />
     </Suspense>
   );

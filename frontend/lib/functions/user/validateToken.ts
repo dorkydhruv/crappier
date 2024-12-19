@@ -2,6 +2,7 @@ import prisma from "../../db";
 
 export const validateToken = async (token: string) => {
   try {
+    console.log("Validating token");
     const tokenData = await prisma.verificationToken.findFirst({
       where: {
         token,
@@ -27,12 +28,16 @@ export const validateToken = async (token: string) => {
       console.log("Token expired");
       return false;
     }
+    console.log(
+      "All checks passed successfully. Deleting token and updating user"
+    );
     //now delete the token
     await prisma.verificationToken.delete({
       where: {
         id: tokenData.id,
       },
     });
+    console.log("All checks passed successfully, now updating user");
     //Now update the user
     await prisma.user.update({
       where: {
