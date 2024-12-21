@@ -12,7 +12,7 @@ export async function publisher() {
       topic: TOPIC_NAME,
       messages: pendingRows.map((row) => ({
         key: row.id.toString(),
-        value: JSON.stringify(row),
+        value: JSON.stringify({...row,stage:0}),
       })),
     });
 

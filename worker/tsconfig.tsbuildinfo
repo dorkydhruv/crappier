@@ -1,1 +1,1 @@
-{"root":["./src/const.ts","./src/index.ts","./src/consumer/index.ts","./src/db/index.ts","./src/publisher/index.ts"],"version":"5.7.2"}
+{"root":["./src/const.ts","./src/index.ts","./src/consumer/index.ts","./src/consumer/functions/email.ts","./src/consumer/functions/parser.ts","./src/consumer/functions/solana.ts","./src/db/index.ts","./src/publisher/index.ts"],"version":"5.7.2"}
