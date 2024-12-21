@@ -22,9 +22,9 @@ app.post("/hook/:userId/:id", async (req, res) => {
         data: {
           payload: body,
           zapId: id,
+          userId,
         },
       });
-
       await tx.zapRunOutbox.create({
         data: {
           zapRunId: run.id,

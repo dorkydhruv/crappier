@@ -8,6 +8,7 @@ import { Copy, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { Loader } from "@/components/Loader";
+import { WORKER } from "@/constants/const";
 export interface Zap {
   name: string;
   id: string;
@@ -52,7 +53,6 @@ export default function Page() {
     axios
       .get("/api/zaps")
       .then((response) => {
-        console.log(response.data);
         setZaps(response.data);
         setShouldFetch(false);
         setLoading(false);
@@ -102,13 +102,12 @@ export default function Page() {
             <Plus className='mr-2 h-4 w-4' /> Create Automation
           </Button>
         </div>
+        {zaps.length === 0 && (
+          <div className='text-center text-gray-500 flex items-center justify-center h-32'>
+            You have not created any automations yet. Click on the button above.
+          </div>
+        )}
         <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
-          {zaps.length === 0 && (
-            <div className='text-center text-gray-500 flex items-center justify-center h-32'>
-              You have not created any automations yet. Click on the button
-              above.
-            </div>
-          )}
           {zaps.map((zap, index) => (
             <div key={index} className='rounded-lg border p-4 shadow-sm'>
               <div className='mb-2 flex items-center justify-between'>
@@ -118,8 +117,9 @@ export default function Page() {
                     size={20}
                     className='cursor-pointer hover:ring-offset-card'
                     onClick={() => {
+                      console.log(WORKER);
                       navigator.clipboard.writeText(
-                        `${process.env.WORKER_URL}/hook/${zap.id}/${zap.userId}`
+                        `${WORKER}/hook/${zap.userId}/${zap.id}`
                       );
                       toast({
                         title: "Copied",

@@ -65,10 +65,10 @@ export async function consumer() {
         await solanaWorker(
           zapRun.payload,
           action.metadata as JsonObject,
-          zapRun.zap.user.email
+          zapRun.zap.user.email,
         );
       } else if (action.availableActionId === "email") {
-        // await emailWorker(zapRun.payload, action.metadata as JsonObject);
+        await emailWorker(zapRun.payload, action.metadata as JsonObject);
       }
 
       await new Promise((resolve) => setTimeout(resolve, 3000));

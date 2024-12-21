@@ -21,7 +21,6 @@ function VerifyPageContent() {
     }
     axios.post("/api/verify", { token }).then((res) => {
       setLoading(false);
-      console.log("Verify: ", res.data.response);
       if (res.data.response === true) {
         setMessage("Account verified successfully");
         setTimeout(() => router.push("/signin"), 2000);

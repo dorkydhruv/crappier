@@ -3,6 +3,7 @@ import { Appbar } from "@/components/Appbar";
 import CheckedFeature from "@/components/CheckedFeature";
 import Divider from "@/components/Divider";
 import InputLabel from "@/components/InputLabel";
+import { Loader } from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
@@ -14,10 +15,11 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   return (
-    <div className='flex flex-col min-h-screen'>
+    <div className=' flex flex-col min-h-screen'>
       <Appbar />
-      <div className='lg:flex lg:justify-center lg:items-center mt-5 '>
+      <div className='relative lg:flex lg:justify-center lg:items-center mt-5 '>
         <div className='lg:grid lg:grid-cols-2 m-10 sm:flex sm:justify-center items-center  '>
           <div className='lg:flex-col lg:items-center '>
             <div className='text-4xl max-w-lg font-serif mb-4'>
@@ -56,15 +58,26 @@ export default function Signup() {
             <div className='flex mt-2'>
               <Button
                 onClick={async () => {
-                  console.log("signup");
-                  const response = await axios.post("/api/signup", {
-                    email,
-                    password,
-                    name: username,
-                  });
-                  toast({
-                    title: response.data.message,
-                  });
+                  setLoading(true);
+                  try {
+                    const response = await axios.post("/api/signup", {
+                      email,
+                      password,
+                      name: username,
+                    });
+                    setLoading(false);
+                    toast({
+                      title: response.data.message,
+                    });
+                    // Route to sign in page
+                  } catch (e) {
+                    console.error(e);
+                    toast({
+                      title: "Internal server error",
+                    });
+                  } finally {
+                    setLoading(false);
+                  }
                 }}
               >
                 Sign up
@@ -76,23 +89,22 @@ export default function Signup() {
               onClick={() => {
                 signIn("google", {
                   redirect: false,
-                  callbackUrl: "/",
+                  callbackUrl: "/dashboard",
                 });
               }}
             >
               <div className='flex justify-between'>
-                {/* <Image
-                  src='https://www.google.com/url?sa=i&url=https%3A%2F%2Ficonduck.com%2Ficons%2F14086%2Fgoogle&psig=AOvVaw2ZTK7csTn1ua1SzA-djft5&ust=1731495484551000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCLjK4qrR1okDFQAAAAAdAAAAABAw'
-                  alt='google'
-                  width={20}
-                  height={20}
-                /> */}
                 <div className='text-white'>Continue with Google</div>
               </div>
             </Button>
           </div>
         </div>
       </div>
+      {loading && (
+        <div className='absolute top-0 left-0 w-full h-full bg-transparent flex justify-center items-center'>
+          <Loader />
+        </div>
+      )}
     </div>
   );
 }

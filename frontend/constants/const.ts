@@ -6,3 +6,4 @@ export const PROGRAM_ID = new PublicKey(
 );
 
 export const BASE_URL = process.env.NEXT_PUBLIC_URL;
+export const WORKER = process.env.WORKER;

@@ -16,10 +16,10 @@ export const authConfig = {
       },
       async authorize(credentials: any) {
         //{ email: string, password: string, csrfToken: string, callbackUrl: string, json: boolean })
-        console.log("Authorizing credentials:", credentials);
+        // console.log("Authorizing credentials:", credentials);
         const validatedCred = LoginSchema.safeParse(credentials);
         if (!validatedCred.success) {
-          console.log("Validation failed:", validatedCred.error);
+          // console.log("Validation failed:", validatedCred.error);
           return null;
         }
         const { email, password } = validatedCred.data;
@@ -27,7 +27,7 @@ export const authConfig = {
           where: { email },
         });
         if (!user || !user.verified) {
-          console.log("User not found or not verified");
+          // console.log("User not found or not verified");
           return null;
         }
         const passwordMatch = await bcrypt.compare(
@@ -35,7 +35,7 @@ export const authConfig = {
           user.password ?? ""
         );
         if (passwordMatch && user.verified) {
-          console.log("Password match, user authorized");
+          // console.log("Password match, user authorized");
           return {
             id: user.id,
             email: user.email,
@@ -43,7 +43,7 @@ export const authConfig = {
             name: user.name,
           };
         } else {
-          console.log("Password mismatch");
+          // console.log("Password mismatch");
           return null;
         }
       },
@@ -78,27 +78,20 @@ export const authConfig = {
       return token;
     },
     async redirect({ url, baseUrl }: any) {
-      // console.log("Redirect callback:", url, baseUrl);
-      if (url === "/dashboard") {
-        console.log(
-          "Redirecting to dashboard -----------------------------------------------------"
-        );
-        return baseUrl + "/dashboard";
-      }
-      return baseUrl + "/signin";
+      return baseUrl;
     },
     // 1st callback when user signs in
     async signIn({ user, account, profile, email, credentials }: any) {
       if (account.provider === "credentials") {
-        console.log("Credentials provider");
+        // console.log("Credentials provider");
         const dbUser = await prisma.user.findFirst({
           where: { id: user.id },
         });
         if (dbUser) {
-          console.log("User found:", dbUser);
+          // console.log("User found:", dbUser);
           return true;
         } else {
-          console.log("User not found");
+          // console.log("User not found");
           return false;
         }
       } else if (account.provider === "google") {

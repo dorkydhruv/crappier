@@ -10,7 +10,6 @@ export const POST = async (req: NextRequest) => {
     }
     const body = await req.json();
     const parsedBody = CreateUserSchema.safeParse(body);
-    console.log(parsedBody);
     if (!parsedBody.success) {
       return NextResponse.json({
         message: "Invalid request body",
@@ -40,7 +39,7 @@ export const POST = async (req: NextRequest) => {
     //Now send verification email
     await generateVerificationToken(newUser.email);
     return NextResponse.json({
-      message: "Verify your user. Check your email for the verification link",
+      message: "Verification email sent. Please check your inbox.",
     });
   } catch (error) {
     // console.error(error);

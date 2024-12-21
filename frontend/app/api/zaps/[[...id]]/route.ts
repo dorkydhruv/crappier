@@ -56,7 +56,6 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({ error: parsedBody.error });
   }
   try {
-    console.log(parsedBody.data);
     // Create the zap with the valid userId
     const zap = await prisma.zap.create({
       data: {
@@ -69,9 +68,10 @@ export const POST = async (req: NextRequest) => {
         },
         userId: user.id,
         actions: {
-          create: parsedBody.data.actions.map((action) => ({
+          create: parsedBody.data.actions.map((action, index) => ({
             availableActionId: action.availableActionId,
             metadata: action.actionMetadata ?? {},
+            sortingOrder: index,
           })),
         },
       },

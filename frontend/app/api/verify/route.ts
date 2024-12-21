@@ -12,7 +12,6 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({
       response: false,
     });
-  console.log("Validating token");
   const tokenData = await prisma.verificationToken.findFirst({
     where: {
       token,

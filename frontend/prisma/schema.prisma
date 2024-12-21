@@ -85,6 +85,7 @@ model ZapRun{
   id String @default(uuid()) @id
   zapId String
   zap Zap @relation(fields: [zapId],references: [id])
+  userId String
   payload Json
   ZapRunOutbox ZapRunOutbox?
 }
