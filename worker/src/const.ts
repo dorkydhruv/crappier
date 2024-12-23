@@ -3,7 +3,7 @@ import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
 import { Kafka } from "kafkajs";
 export const kafka = new Kafka({
   clientId: "worker",
-  brokers: ["localhost:9092"],
+  brokers: [process.env.KAFKA_BROKER ?? "localhost:9092"],
 });
 
 export const connection = new Connection(clusterApiUrl("devnet"));

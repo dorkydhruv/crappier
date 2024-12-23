@@ -2,7 +2,8 @@
   "name": "worker",
   "version": "1.0.0",
   "scripts": {
-    "dev": "tsc -b && node dist/index.js"
+    "dev": "tsc -b && node dist/index.js",
+    "build": "tsc -b"
   },
   "main": "index.js",
   "license": "MIT",
