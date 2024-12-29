@@ -8,31 +8,18 @@ services:
     ports:
       - "3001:3001"
     environment:
-      DATABASE_URL: /run/secrets/DATABASE_URL
-      COMMUNICATION_SERVICES_CONNECTION_STRING: /run/secrets/COMMUNICATION_SERVICES_CONNECTION_STRING
-      ANCHOR_WALLET: /run/secrets/ANCHOR_WALLET
-      KAFKA_BROKER: "kafka:9092"
-    secrets:
-      - DATABASE_URL
-      - COMMUNICATION_SERVICES_CONNECTION_STRING
-      - ANCHOR_WALLET
+      KAFKA_BROKER: "kafka:29092"
+    env_file:
+      - .env
     depends_on:
       - kafka
   kafka:
-    image: apache/kafka:3.9.0
+    attach: false
+    image: docker.redpanda.com/vectorized/redpanda:v22.2.2
     container_name: kafka
     ports:
-      - "9092:9092"
-    entrypoint: >
-      sh -c "
-      cd opt/kafka &&
-      bin/kafka-topics.sh --create --topic zaps --bootstrap-server kafka:9092
-      "
-
-secrets:
-  DATABASE_URL:
-    file: ./secrets/DATABASE_URL
-  COMMUNICATION_SERVICES_CONNECTION_STRING:
-    file: ./secrets/COMMUNICATION_SERVICES_CONNECTION_STRING
-  ANCHOR_WALLET:
-    file: ./secrets/ANCHOR_WALLET
+      - "29092:29092"
+    command:
+      - redpanda start
+      - --kafka-addr PLAINTEXT://0.0.0.0:29092
+      - --advertise-kafka-addr PLAINTEXT://kafka:29092

@@ -1,6 +1,6 @@
 import { JsonObject, Public } from "@prisma/client/runtime/library";
 import { parser } from "./parser";
-import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { Keypair, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { connection, PROGRAM_ID } from "../../const";
 import { AnchorProvider, BN, Idl, Program, Wallet } from "@coral-xyz/anchor";
 import idl from "../../idl.json";
@@ -21,7 +21,7 @@ export async function solanaWorker(
     parsedAmount
   );
   const [potAccount] = PublicKey.findProgramAddressSync(
-    [Buffer.from("pot")],
+    [Buffer.from("pot"), Buffer.from(email)],
     PROGRAM_ID
   );
   const potBalance = await connection.getBalance(potAccount);
@@ -29,11 +29,17 @@ export async function solanaWorker(
     console.log("Insufficient balance");
     // Send email to user that the balance is insufficient
     await insufficientBalanceEmail(payload, email);
-    return;
+    return false;
   }
 
   try {
-    const provider = new AnchorProvider(connection, Wallet.local());
+    const secretKeyArray = JSON.parse(process.env.ANCHOR_PRIVATE_KEY as string);
+    if (!Array.isArray(secretKeyArray) || secretKeyArray.length !== 64) {
+      throw new Error("Invalid secret key");
+    }
+    const secretKey = Uint8Array.from(secretKeyArray);
+    const keypair = Keypair.fromSecretKey(secretKey);
+    const provider = new AnchorProvider(connection, new Wallet(keypair));
     const program = new Program(idl as Idl, provider);
     const tx = await program.methods
       .transferSolToAccount(
@@ -44,8 +50,9 @@ export async function solanaWorker(
         reciever: parsedTo,
       })
       .rpc();
-    console.log("Transaction", tx);
   } catch (e) {
     console.log(e);
+    return false;
   }
+  return true;
 }

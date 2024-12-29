@@ -61,14 +61,18 @@ export async function consumer() {
         console.log("Action not found");
         return;
       }
+      let actionCompleted: boolean = false;
       if (action.availableActionId === "solana") {
-        await solanaWorker(
+        actionCompleted = await solanaWorker(
           zapRun.payload,
           action.metadata as JsonObject,
-          zapRun.zap.user.email,
+          zapRun.zap.user.email
         );
       } else if (action.availableActionId === "email") {
-        await emailWorker(zapRun.payload, action.metadata as JsonObject);
+        actionCompleted = await emailWorker(
+          zapRun.payload,
+          action.metadata as JsonObject
+        );
       }
 
       await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -86,13 +90,15 @@ export async function consumer() {
           ],
         });
       }
-      await consumer.commitOffsets([
-        {
-          topic: TOPIC_NAME,
-          partition: partition,
-          offset: (parseInt(message.offset) + 1).toString(),
-        },
-      ]);
+      actionCompleted
+        ? await consumer.commitOffsets([
+            {
+              topic: TOPIC_NAME,
+              partition: partition,
+              offset: (parseInt(message.offset) + 1).toString(),
+            },
+          ])
+        : null;
     },
   });
 }

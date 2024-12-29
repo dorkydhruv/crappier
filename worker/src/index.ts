@@ -3,7 +3,6 @@ import cors from "cors";
 import { prisma } from "./db";
 import { publisher } from "./publisher";
 import { consumer } from "./consumer";
-import { kafka } from "./const";
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -43,15 +42,9 @@ app.post("/hook/:userId/:id", async (req, res) => {
 });
 
 const t = async () => {
-  // publisher();
-  // consumer();
-  try {
-    await kafka.producer().connect();
-  } catch (e) {
-    console.log("e", e);
-  }
-  console.log("ENVIRONMENT");
-  for (const key in process.env) console.log(key, process.env[key]);
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+  publisher();
+  consumer();
   console.log("Worker is running");
   app.listen(3001, () => {
     console.log("Worker is running on port 3001");
