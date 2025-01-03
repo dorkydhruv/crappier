@@ -94,6 +94,11 @@ export const DELETE = async (
     return NextResponse.redirect(new URL("/signin", req.url));
   }
   try {
+    await prisma.zapRun.deleteMany({
+      where: {
+        zapId: zapId,
+      },
+    });
     await prisma.action.deleteMany({
       where: {
         zapId: zapId,

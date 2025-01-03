@@ -128,7 +128,7 @@ export default function Page() {
                     }}
                   />
                   <h2 className='text-sm text-gray-500'>
-                    {zap.trigger.availableTrigger.name}
+                    {zap.trigger?.availableTrigger.name ?? ""}
                   </h2>
                 </div>
               </div>

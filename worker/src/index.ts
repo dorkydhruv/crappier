@@ -41,6 +41,18 @@ app.post("/hook/:userId/:id", async (req, res) => {
   }
 });
 
+app.get("/", (req, res) => {
+  res.json({
+    message: "Worker is running fine!",
+  });
+});
+
+app.get("/health", (req, res) => {
+  res.json({
+    message: "ok",
+  });
+});
+
 const t = async () => {
   await new Promise((resolve) => setTimeout(resolve, 5000));
   publisher();
