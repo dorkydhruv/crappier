@@ -1,4 +1,3 @@
-
 # Crappier: A poor Zapier
 
 A Zapier-like project that automates Solana transactions. Built using Next.js (frontend and backend) and a Node.js worker that retrieves running jobs from Kafka. Transactions employ SOL stored in a PDA pot. If the transfer exceeds the pot balance, customers will receive an email asking them to refill. Scalable with Kubernetes and Docker.
@@ -34,6 +33,9 @@ Pulls the active zaps from a kafka queue.
 cd worker && docker compose up --build
 ```
 
+
+
+
 #### Environment Variables
 
 `DATABASE_URL`
@@ -43,5 +45,4 @@ cd worker && docker compose up --build
 ---
 ### Demo
 
-![Watch demo](https://github.com/user-attachments/assets/d86e4a54-519e-4cd5-a88d-1694875a4234
-)
+https://github.com/user-attachments/assets/658eb407-0d73-43ad-a259-29b233881fd3
