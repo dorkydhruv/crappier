@@ -1,5 +1,3 @@
-import { Play } from "lucide-react";
-
 export function DashboardDemo() {
   return (
     <section className='py-16 md:py-24 lg:py-32 relative overflow-hidden'>
@@ -27,27 +25,11 @@ export function DashboardDemo() {
             className='rounded-xl overflow-hidden border border-neutral-200/50 
             bg-white/90 relative group cursor-pointer'
           >
-            {/* Enhanced play button overlay */}
-            <div
-              className='absolute inset-0 flex items-center justify-center 
-              bg-gradient-to-tr from-black/30 to-black/10 opacity-0 
-              group-hover:opacity-100 transition-all duration-500'
-            >
-              <div
-                className='w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/90 
-                flex items-center justify-center shadow-lg transform 
-                group-hover:scale-110 transition-all duration-500 
-                hover:shadow-[0_0_30px_-5px_#EBFF00]'
-              >
-                <Play className='w-8 h-8 text-black translate-x-0.5' />
-              </div>
-            </div>
-
             <div className='aspect-[16/9]'>
               <iframe
                 width='100%'
                 height='100%'
-                src='https://www.youtube.com/embed/your-demo-video-id'
+                src='https://www.youtube.com/embed/r8aTzBHcSoE'
                 title='Crappier Dashboard Demo'
                 allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                 allowFullScreen
