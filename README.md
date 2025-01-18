@@ -41,4 +41,5 @@ cd worker && docker compose up --build
 
 ### See it in action
 
-![Demo video](https://www.youtube.com/watch?v=r8aTzBHcSoE)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/r8aTzBHcSoE/0.jpg)](https://www.youtube.com/watch?v=r8aTzBHcSoE)
+
