@@ -49,8 +49,8 @@ export const SolanaActionSheet: React.FC<ActionSheetProps> = ({
         <SheetDescription className='text-md text-slate-600'>
           {actionData.description}
         </SheetDescription>
-        <div className='flex flex-col space-y-4 my-2'>
-          <div className='flex justify-start items-center'>
+        <div className='flex flex-col space-y-4 my-4'>
+          <div className='flex justify-start items-center space-x-2'>
             <AutoSuggestInput
               value={formData.amount}
               onChange={handleInputChange("amount")}
@@ -66,7 +66,7 @@ export const SolanaActionSheet: React.FC<ActionSheetProps> = ({
             triggerMetadata={triggerMetadata}
           />
         </div>
-        <Button onClick={handleSave}>Save</Button>
+        <Button className="w-full" onClick={handleSave}>Save</Button>
       </SheetContent>
     </Sheet>
   );

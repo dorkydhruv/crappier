@@ -72,7 +72,9 @@ export const EmailActionSheet: React.FC<ActionSheetProps> = ({
             placeholder='body'
             triggerMetadata={triggerMetadata}
           />
-          <Button onClick={handleSave}>Save</Button>
+          <Button className='w-full' onClick={handleSave}>
+            Save
+          </Button>
         </div>
       </SheetContent>
     </Sheet>

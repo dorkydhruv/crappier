@@ -8,8 +8,7 @@ body {
 
 @layer base {
   :root {
-    background-color: #fffdf9;
-    --background: 0 0% 100%;
+    --background: 240 14% 99%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -70,4 +69,17 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@keyframes moveDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+.animate-moveDown {
+  animation: moveDown 3s linear infinite;
 }

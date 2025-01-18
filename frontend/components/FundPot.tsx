@@ -17,6 +17,7 @@ import { connection } from "@/constants/const";
 import { useState } from "react";
 import { getPotBalance } from "@/hooks/getPotBalance";
 import SmallLoader from "./SmallLoader";
+import { Wallet, TrendingUp, History } from "lucide-react";
 
 export const FundPot = (user: { email: string }) => {
   const { toast } = useToast();
@@ -59,33 +60,42 @@ export const FundPot = (user: { email: string }) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant={"ghost"} className="border border-black">Fund pot 🍯</Button>
+        <Button
+          variant='ghost'
+          className='group border border-black/80 hover:border-black transition-all duration-300
+             bg-gradient-to-r hover:from-[#EBFF00]/10 hover:to-transparent'
+        >
+          <TrendingUp className='w-4 h-4 mr-2 group-hover:scale-110 transition-transform' />
+          Fund pot 🍯
+        </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>
-            How much would you like to fund the pot?
+      <AlertDialogContent className='sm:max-w-[425px]  bg-white'>
+        <AlertDialogHeader className='space-y-4'>
+          <AlertDialogTitle className='flex items-center gap-2'>
+            <Wallet className='h-5 w-5' />
+            Fund Your Automation Pot
           </AlertDialogTitle>
-          <AlertDialogDescription>
-            <span className='flex items-center gap-2'>
+          <AlertDialogDescription className='space-y-4'>
+            <span className='flex items-center gap-2 bg-neutral-50 p-3 rounded-lg'>
               <Image src={"/solana.png"} width={30} height={30} alt='solana' />
               <Input
                 type='number'
-                placeholder='Amount'
+                placeholder='Enter amount'
                 min={0.0}
                 step={0.01}
                 onChange={(e) => setAmount(Number(e.target.value))}
-                className='w-50'
+                className='w-50 border-none bg-transparent focus-visible:ring-0'
                 required
               />
               <span className='text-black font-bold'>SOL</span>
             </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <div className='flex justify-between items-center'>
-          <div>
+        <div className='flex justify-between items-center space-x-4 pt-4'>
+          <div className='flex items-center gap-2 bg-neutral-50/50 px-3 py-2 rounded-lg'>
+            <History className='w-4 h-4 text-neutral-500' />
             <p className='text-sm text-muted-foreground'>
-              Your current pot balance is{" "}
+              Current balance:{" "}
               {balanceLoading ? (
                 <SmallLoader />
               ) : (
@@ -93,8 +103,19 @@ export const FundPot = (user: { email: string }) => {
               )}
             </p>
           </div>
-          <Button onClick={handleFundPot}  disabled={loading}>
-            {loading ? <SmallLoader /> : "Fund"}
+          <Button
+            onClick={handleFundPot}
+            disabled={loading}
+            className='bg-[#EBFF00] text-black border-black border hover:bg-[#D4E600] transition-all duration-300'
+          >
+            {loading ? (
+              <SmallLoader />
+            ) : (
+              <>
+                <TrendingUp className='w-4 h-4 mr-2' />
+                Fund Now
+              </>
+            )}
           </Button>
         </div>
       </AlertDialogContent>
