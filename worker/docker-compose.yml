@@ -15,7 +15,7 @@ services:
       - kafka
   kafka:
     attach: false
-    image: docker.redpanda.com/vectorized/redpanda:v22.2.2
+    image: redpandadata/redpanda:latest
     container_name: kafka
     ports:
       - "29092:29092"
