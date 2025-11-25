@@ -20,7 +20,7 @@ export async function emailWorker(payload: any, metadata: JsonObject) {
     );
     const emailMessage = {
       senderAddress:
-        "DoNotReply@6325c506-af68-40ee-9669-3a9cdbc262c9.azurecomm.net",
+        "DoNotReply@39181ba3-8f91-45c7-87ba-be7a6688b435.azurecomm.net",
       recipients: {
         to: [{ address: parsedto }],
       },

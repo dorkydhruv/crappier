@@ -61,18 +61,27 @@ export async function consumer() {
         console.log("Action not found");
         return;
       }
+      console.log("Action found:", {
+        availableActionId: action.availableActionId,
+        availableAction: action.availableAction,
+        metadata: action.metadata
+      });
       let actionCompleted: boolean = false;
       if (action.availableActionId === "solana") {
+        console.log("Running Solana worker");
         actionCompleted = await solanaWorker(
           zapRun.payload,
           action.metadata as JsonObject,
           zapRun.zap.user.email
         );
       } else if (action.availableActionId === "email") {
+        console.log("Running Email worker");
         actionCompleted = await emailWorker(
           zapRun.payload,
           action.metadata as JsonObject
         );
+      } else {
+        console.log("Unknown action type:", action.availableActionId);
       }
 
       await new Promise((resolve) => setTimeout(resolve, 3000));
