@@ -64,7 +64,7 @@ export async function consumer() {
       console.log("Action found:", {
         availableActionId: action.availableActionId,
         availableAction: action.availableAction,
-        metadata: action.metadata
+        metadata: action.metadata,
       });
       let actionCompleted: boolean = false;
       if (action.availableActionId === "solana") {

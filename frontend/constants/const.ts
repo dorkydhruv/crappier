@@ -1,7 +1,7 @@
 import {  Connection, PublicKey } from "@solana/web3.js";
 export const GITHUB_URL = "https://github.com/dorkydhruv/crappier";
 export const connection = new Connection(
-  "https://cool-snowy-silence.solana-devnet.quiknode.pro/056b57d6ff0a6ddfc0e2398a332ce5bea67f8985/"
+  "https://thrilling-methodical-brook.solana-devnet.quiknode.pro/dd7c4e3b8a51ab3c1a229f287a30db024e12a6d2"
 );
 export const PROGRAM_ID = new PublicKey(
   "5TtSuWwcCr5ww4Kef2aYsvT8uF9H1hHGyC7fhsCwAaUx"

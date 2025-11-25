@@ -42,7 +42,9 @@ export const ActionNode = (props) => {
     setOpen(true);
   };
 
-  const onNodeClick = () => {
+  const onNodeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log("Action node clicked, full data:", data);
     setIsSheetOpen(true);
   };
 
@@ -95,7 +97,10 @@ export const ActionNode = (props) => {
 
   return (
     <div className='px-6 py-3 border-2 bg-white shadow-md rounded-lg border-stone-500 min-w-[200px]'>
-      <div className='flex items-center gap-3' onClick={onNodeClick}>
+      <div
+        className='flex items-center gap-3 cursor-pointer'
+        onClick={onNodeClick}
+      >
         <img src={data.image} className='w-8 h-8' alt='action' />
         <div className='flex-1'>
           <h3 className='text-lg font-semibold'>{data.name}</h3>
@@ -161,23 +166,23 @@ export const ActionNode = (props) => {
               </div>
             </AlertDialogContent>
           </AlertDialog>
-          {data.id === "solana" && (
-            <SolanaActionSheet
-              isSheetOpen={isSheetOpen}
-              setIsSheetOpen={setIsSheetOpen}
-              handleMetadataChange={handleMetadataChange}
-              actionData={data}
-            />
-          )}
-          {data.id === "email" && (
-            <EmailActionSheet
-              isSheetOpen={isSheetOpen}
-              setIsSheetOpen={setIsSheetOpen}
-              handleMetadataChange={handleMetadataChange}
-              actionData={data}
-            />
-          )}
         </>
+      )}
+      {data.name?.toLowerCase().includes("solana") && (
+        <SolanaActionSheet
+          isSheetOpen={isSheetOpen}
+          setIsSheetOpen={setIsSheetOpen}
+          handleMetadataChange={handleMetadataChange}
+          actionData={data}
+        />
+      )}
+      {data.name?.toLowerCase().includes("email") && (
+        <EmailActionSheet
+          isSheetOpen={isSheetOpen}
+          setIsSheetOpen={setIsSheetOpen}
+          handleMetadataChange={handleMetadataChange}
+          actionData={data}
+        />
       )}
     </div>
   );

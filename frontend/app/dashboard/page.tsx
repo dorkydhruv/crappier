@@ -40,13 +40,16 @@ export default function Page() {
   const [zaps, setZaps] = React.useState<Zap[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [shouldFetch, setShouldFetch] = React.useState(true);
-  if (status === "unauthenticated") {
-    toast({
-      title: "You are not authenticated",
-      description: "Please sign in to continue",
-    });
-    router.replace("/signin");
-  }
+
+  React.useEffect(() => {
+    if (status === "unauthenticated") {
+      toast({
+        title: "You are not authenticated",
+        description: "Please sign in to continue",
+      });
+      router.replace("/signin");
+    }
+  }, [status, router, toast]);
 
   React.useEffect(() => {
     if (!shouldFetch) return;
